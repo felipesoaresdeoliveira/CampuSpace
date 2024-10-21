@@ -13,8 +13,11 @@ if ($con->connect_error) {
     die("<p>Ocorreu um problema ao conectar ao banco de dados: " . $con->connect_error . "</p>");
 }
 
-// Consulta todas as reservas
-$sql = "SELECT sala, data, horario FROM reservas ORDER BY data, horario";
+// Consulta todas as reservas, incluindo a imagem do local
+$sql = "SELECT r.sala, r.data, r.horario, l.foto 
+        FROM reservas r 
+        JOIN locais l ON r.sala = l.nome 
+        ORDER BY r.data, r.horario";
 $result = $con->query($sql);
 ?>
 
@@ -38,7 +41,8 @@ $result = $con->query($sql);
                         <th>Sala</th>
                         <th>Data</th>
                         <th>Horário</th>
-                        <th>Ação</th>
+                        <th>Imagem</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,6 +51,14 @@ $result = $con->query($sql);
                             <td><?php echo $row['sala']; ?></td>
                             <td><?php echo date('d/m/Y', strtotime($row['data'])); ?></td>
                             <td><?php echo $row['horario']; ?></td>
+                            <td>
+                                <!-- Exibe a imagem da sala -->
+                                <?php if (!empty($row['foto'])): ?>
+                                    <img src="../img/locais/<?php echo $row['foto']; ?>" alt="<?php echo $row['sala']; ?>" class="img-thumbnail" style="width: 50px; height: 50px;">
+                                <?php else: ?>
+                                    <p>Sem imagem</p>
+                                <?php endif; ?>
+                            </td>
                             <td>
                                 <!-- Botão para voltar e já preencher a sala -->
                                 <a href="reserva.php?sala=<?php echo urlencode($row['sala']); ?>" class="btn">Voltar e Reservar</a>

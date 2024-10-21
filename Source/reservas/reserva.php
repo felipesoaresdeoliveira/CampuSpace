@@ -1,4 +1,6 @@
 <?php
+session_start();  // Iniciar a sessão
+
 // Dados de conexão com o banco de dados
 $servidor = "localhost:3306";
 $usuario = "root";
@@ -13,6 +15,11 @@ if ($con->connect_error) {
     die("<p>Ocorreu um problema ao conectar ao banco de dados: " . $con->connect_error . "</p>");
 }
 
+// Busca os locais disponíveis no banco
+$sql_locais = "SELECT nome, foto FROM locais";
+$locais_result = $con->query($sql_locais);
+$locais = $locais_result->fetch_all(MYSQLI_ASSOC);
+
 $mensagem = "";
 
 // Verifica se o formulário foi enviado
@@ -21,53 +28,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sala = $_POST['sala'] ?? '';
     $data = $_POST['data'] ?? '';
     $horario = $_POST['horario'] ?? '';
+    
+    // Recupera o usuario_id da sessão
+    $usuario_id = $_SESSION['usuario_id'] ?? null;  // Verifica se o usuário está logado
 
     // Verifica se todos os campos foram preenchidos
-    if (empty($sala) || empty($data) || empty($horario)) {
-        $mensagem = "<p class='error-msg'>Por favor, preencha todos os campos.</p>";
+    if (empty($sala) || empty($data) || empty($horario) || empty($usuario_id)) {
+        $mensagem = "<p class='error-msg'>Por favor, preencha todos os campos e certifique-se de estar logado.</p>";
     } else {
-        // Verifica se já existe uma reserva no mesmo horário e sala
-        $sql_check = "SELECT * FROM reservas WHERE sala = ? AND data = ? AND horario = ?";
-        $stmt_check = $con->prepare($sql_check);
-        $stmt_check->bind_param("sss", $sala, $data, $horario);
-        $stmt_check->execute();
-        $result_check = $stmt_check->get_result();
+        // Prepara a consulta SQL para inserir a nova reserva
+        $sql_insert = "INSERT INTO reservas (sala, data, horario, usuario_id) VALUES (?, ?, ?, ?)";
 
-        // Se já existir uma reserva, não permitir a nova reserva
-        if ($result_check->num_rows > 0) {
-            $mensagem = "<p class='error-msg'>Já existe uma reserva para esta sala no mesmo horário.</p>";
-        } else {
-            // Prepara a consulta SQL para inserir a nova reserva
-            $sql_insert = "INSERT INTO reservas (sala, data, horario) VALUES (?, ?, ?)";
+        $stmt_insert = $con->prepare($sql_insert);
 
-            $stmt_insert = $con->prepare($sql_insert);
-
-            if ($stmt_insert === false) {
-                die("<p>Erro na preparação da consulta: " . $con->error . "</p>");
-            }
-
-            // Conecta os valores aos parâmetros do SQL
-            $stmt_insert->bind_param("sss", $sala, $data, $horario);
-
-            // Executa a consulta e verifica se foi bem-sucedida
-            if ($stmt_insert->execute()) {
-                $mensagem = "<p class='success-msg'>Reserva realizada com sucesso!</p>";
-            } else {
-                $mensagem = "<p class='error-msg'>Erro ao realizar reserva: " . $stmt_insert->error . "</p>";
-            }
-
-            // Fecha a declaração de inserção
-            $stmt_insert->close();
+        if ($stmt_insert === false) {
+            die("<p>Erro na preparação da consulta: " . $con->error . "</p>");
         }
 
-        // Fecha a declaração de verificação
-        $stmt_check->close();
+        // Conecta os valores aos parâmetros do SQL
+        $stmt_insert->bind_param("ssss", $sala, $data, $horario, $usuario_id);
+
+        // Executa a consulta e verifica se foi bem-sucedida
+        if ($stmt_insert->execute()) {
+            $mensagem = "<p class='success-msg'>Reserva realizada com sucesso!</p>";
+        } else {
+            $mensagem = "<p class='error-msg'>Erro ao realizar reserva: " . $stmt_insert->error . "</p>";
+        }
+
+        // Fecha a declaração de inserção
+        $stmt_insert->close();
     }
 }
 
 // Fecha a conexão
 $con->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -79,8 +75,8 @@ $con->close();
 </head>
 <body>
 
-        <!-- Incluindo o Header -->
-        <?php include '../includes/header.php'; ?>
+    <!-- Incluindo o Header -->
+    <?php include '../includes/header.php'; ?>
 
     <div class="container">
         <h1>Fazer uma Reserva</h1>
@@ -94,13 +90,19 @@ $con->close();
                 <label for="sala">Sala:</label>
                 <select name="sala" id="sala" required>
                     <option value="">Selecione uma sala</option>
-                    <option value="Sala estudo">sala para estudo</option>
-                    <option value="Laboratório quimica">Laboratório de quimica</option>
-                    <option value="Laboratório informatica">Laboratório de informatica</option>
-                    <option value="Quadra areia">Quadra de areia</option>
-                    <option value="Quadra poliesportiva">quadra poliesportiva</option>
-
+                    <!-- Loop pelos locais -->
+                    <?php foreach ($locais as $local) { ?>
+                        <option value="<?php echo htmlspecialchars($local['nome']); ?>">
+                            <?php echo htmlspecialchars($local['nome']); ?>
+                        </option>
+                    <?php } ?>
                 </select>
+                <!-- Exibição de fotos das salas -->
+                <div id="preview" class="sala-preview">
+                    <?php foreach ($locais as $local) { ?>
+                        <img src="../img/locais/<?php echo htmlspecialchars($local['foto']); ?>" alt="<?php echo htmlspecialchars($local['nome']); ?>" class="img-preview" style="display:none;" data-sala="<?php echo htmlspecialchars($local['nome']); ?>">
+                    <?php } ?>
+                </div>
             </div>
 
             <div class="form-group">
@@ -120,5 +122,17 @@ $con->close();
             </div>
         </form>
     </div>
+
+    <script>
+        // Mostra a imagem associada ao local selecionado
+        document.getElementById('sala').addEventListener('change', function() {
+            const selecionada = this.value;
+            const previews = document.querySelectorAll('.img-preview');
+            previews.forEach(img => {
+                img.style.display = img.getAttribute('data-sala') === selecionada ? 'block' : 'none';
+            });
+        });
+    </script>
+
 </body>
 </html>

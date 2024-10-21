@@ -9,17 +9,17 @@
 </head>
 <body>
 
-    <!-- Incluindo o Header -->
-    <?php include 'includes/header.php'; ?>
+        <?php include 'includes/header.php'; ?>
 
+       
     <!-- Hero Section -->
     <section class="hero-section text-white text-center py-5">
         <div class="container">
             <h1>Bem-vindo ao Campuspace</h1>
             <p class="lead">Gerencie e reserve espaços no IFPR de forma simples e eficiente.</p>
-            <a href="reservas/reserva.php" class="btn btn-light btn-lg">reservar</a>
+            <a href="reservas/reserva.php" class="btn btn-light btn-lg">Reservar</a>
         </div>
-</section>
+    </section>
 
     <!-- Sobre o Campuspace -->
     <section id="about" class="py-5">

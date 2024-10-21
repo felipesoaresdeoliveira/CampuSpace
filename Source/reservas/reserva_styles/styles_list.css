@@ -18,7 +18,7 @@ body {
 /* Título */
 h1 {
     text-align: center;
-    color: #333;
+    color: #4CAF50;
     margin-bottom: 20px;
 }
 
@@ -35,7 +35,7 @@ h1 {
 }
 
 .table th, .table td {
-    padding: 12px 15px;
+    padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
@@ -53,17 +53,27 @@ h1 {
     color: white;
 }
 
+/* Estilos da imagem */
+.sala-foto {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
 /* Estilos dos botões */
 .btn {
     display: inline-block;
-    padding: 10px 15px;
+    padding: 8px 12px;
     background-color: #4CAF50;
     color: white;
     text-align: center;
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s ease;
+    font-size: 14px;
     font-weight: bold;
+    margin: 5px 0;
 }
 
 .btn:hover {
@@ -85,6 +95,11 @@ a.btn {
     }
 
     .btn {
-        padding: 8px 12px;
+        padding: 6px 10px;
+    }
+
+    .sala-foto {
+        width: 60px;
+        height: 45px;
     }
 }
