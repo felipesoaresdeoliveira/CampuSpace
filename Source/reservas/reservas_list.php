@@ -27,9 +27,13 @@ $result = $con->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campuspace - Lista de Reservas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./reserva_styles/styles_list.css">
 </head>
 <body>
+<?php include '../includes/header.php'; ?>
+
+
     <div class="container">
         <h1>Lista de Reservas</h1>
 
@@ -60,8 +64,6 @@ $result = $con->query($sql);
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <!-- Botão para voltar e já preencher a sala -->
-                                <a href="reserva.php?sala=<?php echo urlencode($row['sala']); ?>" class="btn">Voltar e Reservar</a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
@@ -76,5 +78,7 @@ $result = $con->query($sql);
     </div>
 
     <?php $con->close(); ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

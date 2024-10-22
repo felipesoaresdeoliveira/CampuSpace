@@ -7,15 +7,10 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="../index.php">Início</a>
+                    <a class="nav-link" href="../reservas/usuarios_dashboard.php">Início</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="../reservas/reserva.php">Saiba Mais</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./loguin/login.php">
-                        <?php echo isset($_SESSION['user']) ? 'Sair' : 'Entrar'; ?>
-                    </a>
                 </li>
             </ul>
         </div>

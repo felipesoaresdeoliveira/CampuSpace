@@ -1,0 +1,121 @@
+/* Definindo cores */
+:root {
+    --primary-color: #006837; /* Verde IFPR */
+    --secondary-color: #ffffff; /* Branco */
+    --background-color: #f4f4f4; /* Fundo claro */
+    --text-color: #333333; /* Cor do texto */
+    --error-color: #ff4d4d; /* Cor para erros */
+}
+
+/* Estilos Globais */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+/* Contêiner de login */
+form {
+    background-color: var(--secondary-color);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-sizing: border-box;
+}
+
+/* Inputs de formulário */
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+/* Links de navegação */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    display: inline-block;
+    text-align: center;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Botão de login */
+button {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 12px 0;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #004f2d;
+}
+
+/* Contêiner de links */
+form .links-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+/* Mensagens de erro */
+.error-msg {
+    color: var(--error-color);
+    font-size: 1rem;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    form {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    form {
+        padding: 15px;
+        width: 100%;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+}

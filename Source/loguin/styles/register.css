@@ -1,0 +1,26 @@
+body {
+    background-color: #f8f9fa; /* Cor de fundo padrão */
+    color: #343a40; /* Cor do texto padrão */
+}
+
+.container {
+    max-width: 600px; /* Largura máxima para o contêiner */
+    margin: auto; /* Centraliza o contêiner na página */
+    padding: 20px; /* Espaçamento interno */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    background-color: white; /* Cor de fundo do contêiner */
+}
+
+h2 {
+    margin-bottom: 20px; /* Espaçamento abaixo do título */
+}
+
+.btn {
+    margin-top: 10px; /* Espaçamento acima dos botões */
+}
+
+/* Estilo para mensagens de erro e sucesso */
+.alert {
+    margin-top: 20px; /* Espaçamento acima das mensagens */
+}

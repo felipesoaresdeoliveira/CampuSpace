@@ -4,6 +4,10 @@
     --hover-color: #004d27; /* Verde escuro para hover */
     --accent-color: #b3e5cc; /* Verde suave */
     --text-color: #333333; /* Cor do texto principal */
+    --header-bg-color: #005c30; /* Cor de fundo do header */
+    --footer-bg-color: #003d24; /* Cor de fundo do footer */
+    --button-bg-color: #28a745; /* Cor padrão dos botões */
+    --button-hover-color: #218838; /* Cor dos botões ao passar o mouse */
 }
 
 /* Estilos gerais */
@@ -142,6 +146,132 @@ input[type="file"] {
 
 .btn:hover {
     background-color: var(--hover-color); /* Verde escuro ao passar o mouse */
+}
+
+/* Estilos Globais */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+header {
+    background-color: var(--primary-color);
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between; /* Espalha os itens no cabeçalho */
+    align-items: center;
+}
+
+/* Logo e Título */
+header .navbar-brand {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+
+/* Menu de Navegação */
+header .collapse {
+    display: flex;
+    justify-content: flex-end; /* Alinha os itens do menu à direita */
+}
+
+header .nav-link {
+    color: var(--secondary-color);
+    margin: 0 15px;
+    transition: color 0.3s;
+}
+
+header .nav-link:hover {
+    color: var(--accent-color);
+}
+
+/* Navbar Toggler */
+header .navbar-toggler {
+    border-color: var(--secondary-color);
+}
+
+header .navbar-toggler-icon {
+    background-color: var(--secondary-color);
+}
+/* Footer */
+footer {
+    background-color: var(--footer-bg-color);
+    color: var(--primary-color);
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-content p {
+    margin: 0;
+}
+
+.footer-content ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-content ul li {
+    margin: 0 15px;
+}
+
+.footer-content ul li a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-content ul li a:hover {
+    color: #FFD700; /* Cor ao passar o mouse */
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    header .container-fluid {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    header .navbar-nav {
+        flex-direction: column; /* Menu em coluna */
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    header .navbar-nav .nav-link {
+        margin: 10px 0; /* Margem vertical para links do menu */
+    }
+
+    .btn {
+        width: 100%; /* Botões ocupando a largura total */
+    }
+
+    .hero-section h1 {
+        font-size: 2.5rem; /* Reduz o tamanho da fonte em telas menores */
+    }
+
+    .hero-section p.lead {
+        font-size: 1.2rem; /* Reduz o tamanho da fonte em telas menores */
+    }
+
+    #about h2, #services h2 {
+        font-size: 1.8rem; /* Ajuste do tamanho do título */
+    }
 }
 
 

@@ -9,7 +9,19 @@
 </head>
 <body>
 
-        <?php include 'includes/header.php'; ?>
+<header class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="index.php">Campuspace</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+            </ul>
+        </div>
+    </div>
+</header>
+
 
        
     <!-- Hero Section -->
@@ -17,7 +29,7 @@
         <div class="container">
             <h1>Bem-vindo ao Campuspace</h1>
             <p class="lead">Gerencie e reserve espaços no IFPR de forma simples e eficiente.</p>
-            <a href="reservas/reserva.php" class="btn btn-light btn-lg">Reservar</a>
+            <a href="loguin/login.php" class="btn btn-light btn-lg">Começar</a>
         </div>
     </section>
 
