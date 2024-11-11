@@ -1,26 +1,108 @@
+/* Definindo cores */
+:root {
+    --primary-color: #006837; /* Verde IFPR */
+    --secondary-color: #ffffff; /* Branco */
+    --background-color: #f4f4f4; /* Fundo claro */
+    --text-color: #333333; /* Cor do texto */
+    --error-color: #ff4d4d; /* Cor para erros */
+    --success-color: #28a745; /* Cor para sucesso */
+}
+
+/* Estilos Globais */
 body {
-    background-color: #f8f9fa; /* Cor de fundo padrão */
-    color: #343a40; /* Cor do texto padrão */
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 
-.container {
-    max-width: 600px; /* Largura máxima para o contêiner */
-    margin: auto; /* Centraliza o contêiner na página */
-    padding: 20px; /* Espaçamento interno */
-    border-radius: 8px; /* Bordas arredondadas */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    background-color: white; /* Cor de fundo do contêiner */
+h1 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 2rem;
 }
 
-h2 {
-    margin-bottom: 20px; /* Espaçamento abaixo do título */
+/* Contêiner do formulário de registro */
+form {
+    background-color: var(--secondary-color);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-sizing: border-box;
 }
 
-.btn {
-    margin-top: 10px; /* Espaçamento acima dos botões */
+/* Inputs de formulário */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
 }
 
-/* Estilo para mensagens de erro e sucesso */
-.alert {
-    margin-top: 20px; /* Espaçamento acima das mensagens */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+/* Mensagens de erro e sucesso */
+.error-msg {
+    color: var(--error-color);
+    font-size: 1rem;
+    text-align: center;
+}
+
+.success-msg {
+    color: var(--success-color);
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* Botão de registro */
+button {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 12px 0;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #004f2d;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    form {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    form {
+        padding: 15px;
+        width: 100%;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
 }
