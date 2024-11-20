@@ -1,5 +1,5 @@
 <?php
-session_start();  // Iniciar a sessão
+session_start();
 
 // Dados de conexão com o banco de dados
 $servidor = "localhost:3306";
@@ -12,151 +12,120 @@ $con = new mysqli($servidor, $usuario, $senha, $banco);
 
 // Verifica a conexão
 if ($con->connect_error) {
-    die("<p>Ocorreu um problema ao conectar ao banco de dados: " . $con->connect_error . "</p>");
+    die("Erro ao conectar: " . $con->connect_error);
 }
 
-// Busca os locais disponíveis no banco
-$sql_locais = "SELECT nome, foto FROM locais";
-$locais_result = $con->query($sql_locais);
-$locais = $locais_result->fetch_all(MYSQLI_ASSOC);
-
+// Variável para armazenar a mensagem de erro/sucesso
 $mensagem = "";
 
-// Verifica se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obtém os dados do formulário e evita SQL Injection usando prepare statements
-    $sala = $_POST['sala'] ?? '';
-    $data = $_POST['data'] ?? '';
-    $horario = $_POST['horario'] ?? '';
-    $nome = $_POST['nome'] ?? '';  // Novo campo para o nome
-    $email = $_POST['email'] ?? ''; // Novo campo para o email
+    // Recebe os dados do formulário
+    $nome = $_POST['nome'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $senha = $_POST['senha'] ?? '';
+    $confirma_senha = $_POST['confirma_senha'] ?? '';
 
     // Verifica se todos os campos foram preenchidos
-    if (empty($sala) || empty($data) || empty($horario) || empty($nome) || empty($email)) {
+    if (empty($nome) || empty($email) || empty($senha) || empty($confirma_senha)) {
         $mensagem = "<p class='error-msg'>Por favor, preencha todos os campos.</p>";
+    } elseif ($senha !== $confirma_senha) {
+        // Verifica se as senhas são iguais
+        $mensagem = "<p class='error-msg'>As senhas não correspondem.</p>";
     } else {
-        // Verifica se já existe uma reserva para o mesmo dia e horário
-        $sql_verifica_reserva = "SELECT COUNT(*) as total FROM reservas WHERE sala = ? AND data = ? AND horario = ?";
-        $stmt_verifica = $con->prepare($sql_verifica_reserva);
-        $stmt_verifica->bind_param("sss", $sala, $data, $horario);
+        // Verifica se o email já está registrado
+        $sql_verifica_email = "SELECT id FROM usuarios WHERE email = ?";
+        $stmt_verifica = $con->prepare($sql_verifica_email);
+        $stmt_verifica->bind_param("s", $email);
         $stmt_verifica->execute();
         $resultado = $stmt_verifica->get_result();
-        $reserva_existente = $resultado->fetch_assoc()['total'];
-
-        if ($reserva_existente > 0) {
-            $mensagem = "<p class='error-msg'>Já existe uma reserva para essa sala, data e horário.</p>";
+        
+        if ($resultado->num_rows > 0) {
+            $mensagem = "<p class='error-msg'>Este email já está registrado.</p>";
         } else {
-            // Prepara a consulta SQL para inserir a nova reserva
-            $sql_insert = "INSERT INTO reservas (sala, data, horario, nome, email) VALUES (?, ?, ?, ?, ?)";
-            $stmt_insert = $con->prepare($sql_insert);
-
-            if ($stmt_insert === false) {
-                die("<p>Erro na preparação da consulta: " . $con->error . "</p>");
-            }
-
-            // Conecta os valores aos parâmetros do SQL
-            $stmt_insert->bind_param("sssss", $sala, $data, $horario, $nome, $email);
-
-            // Executa a consulta e verifica se foi bem-sucedida
-            if ($stmt_insert->execute()) {
-                $mensagem = "<p class='success-msg'>Reserva realizada com sucesso!</p>";
+            // Verifica o domínio do email para determinar o tipo de usuário
+            if (strpos($email, '@estudantes.ifpr.edu') !== false) {
+                $tipo = 'aluno';
+            } elseif (strpos($email, '@gmail.com') !== false) {
+                $tipo = 'admin';
             } else {
-                $mensagem = "<p class='error-msg'>Erro ao realizar reserva: " . $stmt_insert->error . "</p>";
+                $tipo = 'aluno'; // Padrão para domínios desconhecidos
             }
 
-            // Fecha a declaração de inserção
+            // Hashear a senha antes de inserir no banco
+            $senha_hashed = password_hash($senha, PASSWORD_DEFAULT);
+
+            // Insere os dados no banco
+            $sql_insert = "INSERT INTO usuarios (nome, email, senha, tipo) VALUES (?, ?, ?, ?)";
+            $stmt_insert = $con->prepare($sql_insert);
+            $stmt_insert->bind_param("ssss", $nome, $email, $senha_hashed, $tipo);
+
+            if ($stmt_insert->execute()) {
+                $_SESSION['usuario_nome'] = $nome;
+                $_SESSION['tipo'] = $tipo;
+
+                // Redireciona para a dashboard correta com base no tipo de usuário
+                if ($tipo == 'admin') {
+                    header("Location: ../adms/index_adm.php");
+                } else {
+                    header("Location: ../reservas/usuarios_dashboard.php");
+                }
+                exit();
+            } else {
+                $mensagem = "<p class='error-msg'>Erro ao registrar: " . $stmt_insert->error . "</p>";
+            }
+
             $stmt_insert->close();
         }
+        $stmt_verifica->close();
     }
 }
 
-// Fecha a conexão
+// Fecha a conexão com o banco de dados
 $con->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campuspace - Fazer Reserva</title>
+    <title>Registro de Usuário</title>
+    <link rel="stylesheet" href="../loguin/styles/register.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../reservas/reserva_styles/reserva_styles.css">
+    <style>
+        .error-msg { color: red; }
+        .success-msg { color: green; }
+        body { padding: 2rem; }
+        form { max-width: 500px; margin: auto; }
+    </style>
 </head>
 <body>
 
-    <!-- Incluindo o Header -->
-    <?php include '../includes/header.php'; ?>
+    <h1>Registro de Usuário</h1>
 
-    <section class="p-5"></section>
+    <!-- Exibe a mensagem de erro ou sucesso -->
+    <?php echo $mensagem; ?>
 
-    <div class="container">
-        <h1>Fazer uma Reserva</h1>
-
-        <!-- Exibe a mensagem de sucesso ou erro -->
-        <?php echo $mensagem; ?>
-
-        <!-- Formulário de reserva -->
-        <form action="reserva.php" method="POST">
-            <div class="form-group">
-                <label for="sala">Sala:</label>
-                <select name="sala" id="sala" required>
-                    <option value="">Selecione uma sala</option>
-                    <!-- Loop pelos locais -->
-                    <?php foreach ($locais as $local) { ?>
-                        <option value="<?php echo htmlspecialchars($local['nome']); ?>">
-                            <?php echo htmlspecialchars($local['nome']); ?>
-                        </option>
-                    <?php } ?>
-                </select>
-                <!-- Exibição de fotos das salas -->
-                <div id="preview" class="sala-preview">
-                    <?php foreach ($locais as $local) { ?>
-                        <img src="../img/locais/<?php echo htmlspecialchars($local['foto']); ?>" alt="<?php echo htmlspecialchars($local['nome']); ?>" class="img-preview" style="display:none;" data-sala="<?php echo htmlspecialchars($local['nome']); ?>">
-                    <?php } ?>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="data">Data:</label>
-                <input type="date" name="data" id="data" required>
-            </div>
-
-            <div class="form-group">
-                <label for="horario">Horário:</label>
-                <input type="time" name="horario" id="horario" required>
-            </div>
-
-            <!-- Novos campos para nome e email -->
-            <div class="form-group">
-                <label for="nome">Nome:</label>
-                <input type="text" name="nome" id="nome" required>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" name="email" id="email" required>
-            </div>
-
-            <!-- Contêiner para centralizar o botão -->
-            <div class="btn-container">
-                <button type="submit" class="btn">Reservar</button>
-                <button type="button" class="btn" onclick="window.location.href='reservas_list.php'">Locais reservados</button>
-            </div>
-        </form>
-    </div>
-
-    <script>
-        // Mostra a imagem associada ao local selecionado
-        document.getElementById('sala').addEventListener('change', function() {
-            const selecionada = this.value;
-            const previews = document.querySelectorAll('.img-preview');
-            previews.forEach(img => {
-                img.style.display = img.getAttribute('data-sala') === selecionada ? 'block' : 'none';
-            });
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Formulário de registro -->
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome" id="nome" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="senha">Senha:</label>
+            <input type="password" name="senha" id="senha" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="confirma_senha">Confirmar Senha:</label>
+            <input type="password" name="confirma_senha" id="confirma_senha" class="form-control" required>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Registrar</button>
+    </form>
 
 </body>
 </html>

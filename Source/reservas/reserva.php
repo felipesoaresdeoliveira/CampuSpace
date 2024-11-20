@@ -133,6 +133,8 @@ $con->close();
         </form>
     </div>
 
+
+
     <script>
         // Mostra a imagem associada ao local selecionado
         document.getElementById('sala').addEventListener('change', function() {
