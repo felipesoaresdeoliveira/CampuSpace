@@ -6,9 +6,12 @@
     --accent-color: #b3e5cc; /* Verde suave */
     --text-color: #333333; /* Cor do texto principal */
     --header-bg-color: #005c30; /* Cor de fundo do header */
-    --footer-bg-color: #003d24; /* Cor de fundo do footer */
-    --button-bg-color: #28a745; /* Cor padrão dos botões */
-    --button-hover-color: #218838; /* Cor dos botões ao passar o mouse */
+    --footer-bg-color: #004d27; /* Cor de fundo do footer */
+    --button-bg-color: #b3e5cc; /* Cor padrão dos botões */
+    --button-hover-color: #004d27; /* Cor dos botões ao passar o mouse */
+    --card-bg-color: #ffffff; /* Cor de fundo dos cards */
+    --card-shadow-color: rgba(0, 0, 0, 0.1); /* Sombra dos cards */
+    --hero-gradient: linear-gradient(135deg, #006837, #004d27); /* Gradiente do Hero */
 }
 
 /* Estilos Globais */
@@ -21,57 +24,113 @@ body {
     padding: 0;
 }
 
-/* Header */
+/* Header Geral */
 header {
-    background-color: var(--primary-color);
-    padding: 15px 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #006837; /* Verde IFPR */
+    color: #ffffff; /* Branco */
+    padding: 15px 20px;
+    font-family: Arial, sans-serif;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-header .container {
+/* Container do Header */
+header .container-fluid {
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;
-    justify-content: space-between; /* Espalha os itens no cabeçalho */
+    justify-content: space-between;
     align-items: center;
 }
 
-/* Logo e Título */
+/* Logo */
 header .navbar-brand {
     font-size: 1.5rem;
-    color: var(--secondary-color);
+    color: #ffffff;
     font-weight: bold;
+    text-decoration: none;
 }
 
-/* Menu de Navegação */
-header .collapse {
+header .navbar-brand:hover {
+    text-decoration: underline;
+}
+
+/* Botão Responsivo */
+header .navbar-toggler {
+    background-color: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 1.5rem;
+}
+
+/* Menu Responsivo */
+header .navbar-collapse {
+    display: none; /* Oculto por padrão */
+    text-align: center;
+}
+
+header .navbar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: flex;
-    justify-content: flex-end; /* Alinha os itens do menu à direita */
+    gap: 20px;
+}
+
+header .nav-item {
+    margin: 0;
 }
 
 header .nav-link {
-    color: var(--secondary-color);
-    margin: 0 15px;
-    transition: color 0.3s;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
 }
 
 header .nav-link:hover {
+    color: #FFD700; /* Dourado no hover */
+}
+
+
+
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease-in-out;
+}
+
+a:hover {
+    color: var(--hover-color);
+}
+
+/* Header */
+.navbar {
+    background-color: var(--header-bg-color);
+    padding: 15px;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+.navbar-nav .nav-link {
+    color: var(--secondary-color);
+    margin-left: 15px;
+}
+
+.navbar-nav .nav-link:hover {
     color: var(--accent-color);
 }
-
-/* Navbar Toggler */
-header .navbar-toggler {
-    border-color: var(--secondary-color);
-}
-
-header .navbar-toggler-icon {
-    background-color: var(--secondary-color);
-}
-
 
 /* Botões */
 .btn {
     padding: 10px 20px;
     background-color: var(--button-bg-color);
-    color: var(--secondary-color);
+    color: var(--primary-color);
     border: none;
     border-radius: 5px;
     transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
@@ -80,14 +139,15 @@ header .navbar-toggler-icon {
 
 .btn:hover {
     background-color: var(--button-hover-color);
-    transform: translateY(-2px); /* Levanta o botão ao passar o mouse */
+    color: var(--secondary-color);
+    transform: translateY(-2px);
 }
 
 /* Seção Hero */
 .hero-section {
-    background-color: var(--primary-color);
+    background: var(--hero-gradient);
+    color: var(--secondary-color);
     padding: 100px 20px;
-    color: #fff;
     text-align: center;
 }
 
@@ -106,13 +166,23 @@ header .navbar-toggler-icon {
 #about {
     padding: 60px 20px;
     background-color: var(--secondary-color);
-    text-align: center;
 }
 
 #about h2 {
     color: var(--primary-color);
     font-size: 2rem;
     margin-bottom: 20px;
+}
+
+#about p {
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+/* Imagem "Sobre" */
+#about img {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px var(--card-shadow-color);
 }
 
 /* Seção "Serviços" */
@@ -128,74 +198,27 @@ header .navbar-toggler-icon {
     margin-bottom: 40px;
 }
 
-/* Footer */
-footer {
-    background-color: var(--footer-bg-color);
-    color: var(--secondary-color);
-    padding: 20px 0;
-    text-align: center;
+.card {
+    background-color: var(--card-bg-color);
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px var(--card-shadow-color);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px var(--card-shadow-color);
 }
 
-.footer-content p {
-    margin: 0;
+.card-title {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
 }
 
-.footer-content ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    justify-content: center;
+.card-text {
+    font-size: 1rem;
+    color: var(--text-color);
 }
 
-.footer-content ul li {
-    margin: 0 15px;
-}
-
-.footer-content ul li a {
-    color: var(--secondary-color);
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.footer-content ul li a:hover {
-    color: #FFD700; /* Cor ao passar o mouse */
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-    header .container-fluid {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    header .navbar-nav {
-        flex-direction: column; /* Menu em coluna */
-        width: 100%;
-        padding: 10px 0;
-    }
-
-    header .navbar-nav .nav-link {
-        margin: 10px 0; /* Margem vertical para links do menu */
-    }
-
-    .btn {
-        width: 100%; /* Botões ocupando a largura total */
-    }
-
-    .hero-section h1 {
-        font-size: 2.5rem; /* Reduz o tamanho da fonte em telas menores */
-    }
-
-    .hero-section p.lead {
-        font-size: 1.2rem; /* Reduz o tamanho da fonte em telas menores */
-    }
-
-    #about h2, #services h2 {
-        font-size: 1.8rem; /* Ajuste do tamanho do título */
-    }
-}
